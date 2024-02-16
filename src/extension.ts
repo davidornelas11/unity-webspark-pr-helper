@@ -1,16 +1,12 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { selectPackageCommand } from './selectPackageCommand';
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
 	const savedFolderPath = context.workspaceState.get<string>('unityDesignSystemRepoPath');
+    const path1 = vscode.workspace.getConfiguration().get('unityDesignSystemRepoPath');
 
     if (!savedFolderPath) {
-        // If not, ask for it
         selectUnityDesignSystemRepo().then(folderPath => {
             if (folderPath) {
                 context.workspaceState.update('unityDesignSystemRepoPath', folderPath);
@@ -20,10 +16,10 @@ export function activate(context: vscode.ExtensionContext) {
     }
 
     let disposable = vscode.commands.registerCommand('add-unity-package-to-webspark-ci.askForUnityLocation', async () => {
-        // Retrieve the saved folder path
+
         const folderPath = context.workspaceState.get<string>('unityDesignSystemRepoPath');
         if (folderPath) {
-            // Proceed with your logic using the folderPath
+            vscode.window.showInformationMessage(`Folder path saved: ${folderPath}`);
         } else {
             vscode.window.showWarningMessage('Folder path not set. Please deactivate and activate the extension again.');
         }
@@ -31,12 +27,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(disposable);
 
-    let selectPackageDisposable = vscode.commands.registerCommand('add-unity-package-to-webspark-ci.selectPackage', selectPackageCommand);
+    let selectPackageDisposable = vscode.commands.registerCommand('add-unity-package-to-webspark-ci.selectPackage', () => {
+        selectPackageCommand(context);
+    });
 
     context.subscriptions.push(selectPackageDisposable);
 }
 
-// This method is called when your extension is deactivated
 export function deactivate() {}
 
 async function selectUnityDesignSystemRepo(): Promise<string | undefined> {
