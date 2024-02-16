@@ -6,6 +6,10 @@
   "engines": {
     "vscode": "^1.86.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/davidornelas11/unity-webspark-pr-helper.git"
+  },
   "categories": [
     "Other"
   ],
