@@ -1,7 +1,7 @@
-  trigger:
-    branches:
-      include:
-      - main
+trigger:
+  branches:
+    include:
+    - main
   tags:
     include:
     - refs/tags/v*
@@ -37,8 +37,10 @@ steps:
     echo ">>> Compiled vscode-test"
     npm run test
   displayName: Run Tests
-  
-  - bash: |
+  env:
+    DISPLAY: ':99.0'
+
+- bash: |
     echo ">>> Package extension"
     npm run package
     echo ">>> Packaged extension"
@@ -48,8 +50,4 @@ steps:
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['Agent.OS'], 'Linux'))
   env:
     VSCE_PAT: $(VSCE_PAT)
-  env:
-    DISPLAY: ':99.0'
-  displayName: Run Tests
-  env:
     DISPLAY: ':99.0'
