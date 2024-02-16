@@ -13,7 +13,7 @@
   "categories": [
     "Other"
   ],
-  "publisher": "David Ornelas",
+  "publisher": "DavidOrnelas",
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
