@@ -1,10 +1,10 @@
-trigger:
-  branches:
-    include:
-    - main
+  trigger:
+    branches:
+      include:
+      - main
   tags:
     include:
-    - v*
+    - refs/tags/v*
 
 strategy:
   matrix:
@@ -22,7 +22,7 @@ steps:
 
 - task: NodeTool@0
   inputs:
-    versionSpec: '10.x'
+    versionSpec: '18.x'
   displayName: 'Install Node.js'
 
 - bash: |
@@ -32,12 +32,24 @@ steps:
   condition: and(succeeded(), eq(variables['Agent.OS'], 'Linux'))
 
 - bash: |
-    echo ">>> Compile vscode-test"
-    yarn && yarn compile
+    echo ">>> Compile unity helper extension"
+    npm install && npm run compile
     echo ">>> Compiled vscode-test"
-    cd sample
-    echo ">>> Run sample integration test"
-    yarn && yarn compile && yarn test
+    npm run test
+  displayName: Run Tests
+  
+  - bash: |
+    echo ">>> Package extension"
+    npm run package
+    echo ">>> Packaged extension"
+    echo ">>> Publish extension"
+    npm run deploy
+  displayName: Publish
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), eq(variables['Agent.OS'], 'Linux'))
+  env:
+    VSCE_PAT: $(VSCE_PAT)
+  env:
+    DISPLAY: ':99.0'
   displayName: Run Tests
   env:
     DISPLAY: ':99.0'

@@ -27,7 +27,7 @@ function copyFiles(config: config) {
             if (err) {
                 vscode.window.showErrorMessage(`Error copying file: ${err}`);
             }
-})
-}
+});
+};
 
 export { copyFiles, packageBuildFileConfig, websparkUnitypackageConfig};
